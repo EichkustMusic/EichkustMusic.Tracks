@@ -13,6 +13,10 @@ namespace EichkustMusic.Tracks.Application.DTOs.Track
         public string? Description { get; set; }
 
         [Required]
+        [MaxLength(64)]
+        public string Name { get; set; } = null!;
+
+        [Required]
         public int UserId { get; set; }
 
         public int? AlbumId { get; set; }

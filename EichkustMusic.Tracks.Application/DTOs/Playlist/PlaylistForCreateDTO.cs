@@ -13,7 +13,6 @@ namespace EichkustMusic.Tracks.Application.DTOs.Playlist
         [MaxLength(64)]
         public string Name { get; set; } = null!;
 
-        [Required]
         [MaxLength(1024)]
         public string Description { get; set; } = null!;
 

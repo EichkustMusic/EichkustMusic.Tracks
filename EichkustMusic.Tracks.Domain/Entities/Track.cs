@@ -14,6 +14,10 @@ namespace EichkustMusic.Tracks.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
+        [MaxLength(64)]
+        public string Name { get; set; } = null!;
+
         [MaxLength(2048)]
         public string? Description { get; set; }
 

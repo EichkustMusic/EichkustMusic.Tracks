@@ -18,9 +18,8 @@ namespace EichkustMusic.Tracks.Domain.Entities
         [MaxLength(64)]
         public string Name { get; set; } = null!;
 
-        [Required]
         [MaxLength(1024)]
-        public string Description { get; set; } = null!;
+        public string? Description { get; set; }
 
         public ICollection<PlaylistTrack> PlaylistTracks { get; set; } = new List<PlaylistTrack>();
 
