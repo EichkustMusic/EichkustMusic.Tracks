@@ -16,5 +16,16 @@ namespace EichkustMusic.Tracks.Application.DTOs.Album
         public IEnumerable<TrackDTO> Tracks { get ; set; } = new List<TrackDTO>();
         
         public string PathToUploadCoverImage { get; set; } = null!;
+
+        public static AlbumCreateResultDTO MapFromAlbum(Domain.Entities.Album album)
+        {
+            return new AlbumCreateResultDTO
+            {
+                Id = album.Id,
+                Description = album.Description,
+                Tracks = TrackDTO.MapFromTracksListToTrackDTOsList(
+                    (List<Domain.Entities.Track>)album.Tracks)
+            };
+        }
     }
 }

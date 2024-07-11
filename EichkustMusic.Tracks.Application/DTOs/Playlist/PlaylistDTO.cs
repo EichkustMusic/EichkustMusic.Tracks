@@ -16,5 +16,17 @@ namespace EichkustMusic.Tracks.Application.DTOs.Playlist
         public string? Description { get; set; }
 
         public IEnumerable<TrackDTO> Tracks { get; set; } = new List<TrackDTO>();
+
+        public static PlaylistDTO MapFromPlaylist(Domain.Entities.Playlist playlist)
+        {
+            return new PlaylistDTO
+            {
+                Id = playlist.Id,
+                Name = playlist.Name,
+                Description = playlist.Description,
+                Tracks = TrackDTO.MapFromTracksListToTrackDTOsList(
+                    (List<Domain.Entities.Track>)playlist.Tracks)
+            };
+        }
     }
 }

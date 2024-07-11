@@ -15,10 +15,38 @@ namespace EichkustMusic.Tracks.Application.DTOs.Track
 
         public int UserId { get; set; }
 
-        public string CoverImagePath { get; set; } = null!;
+        public string? CoverImagePath { get; set; }
 
-        public string MusicPath { get; set; } = null!;
+        public string? MusicPath { get; set; }
 
         public AlbumDTO? Album { get; set; }
+
+        public static TrackDTO MapFromTrack(Domain.Entities.Track track)
+        {
+            return new TrackDTO
+            {
+                Id = track.Id,
+                Description = track.Description,
+                UserId = track.UserId,
+                CoverImagePath = track.CoverImagePath,
+                MusicPath = track.MusicPath,
+                Album = 
+                    track.Album is null
+                    ? null
+                    : AlbumDTO.MapFromAlbum(track.Album)
+            };
+        }
+
+        public static List<TrackDTO> MapFromTracksListToTrackDTOsList(
+            List<Domain.Entities.Track> tracks)
+        {
+            var trackDTOs = new List<TrackDTO>();
+
+            tracks.ForEach(t =>
+                trackDTOs.Add(
+                    MapFromTrack(t)));
+
+            return trackDTOs;
+        }
     }
 }
