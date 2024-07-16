@@ -9,7 +9,7 @@ namespace EichkustMusic.Tracks.Application.UnitOfWork.Repositories
 {
     public interface IAlbumRepository
     {
-        public Task<Album> GetByIdAsync(int id);
+        public Task<Album?> GetByIdAsync(int id);
 
         public Task<IEnumerable<Album>> ListAsync(
             int pageNum, int pageSize, int? search);
