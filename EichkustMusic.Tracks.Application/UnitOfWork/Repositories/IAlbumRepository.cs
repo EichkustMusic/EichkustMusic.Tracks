@@ -12,7 +12,7 @@ namespace EichkustMusic.Tracks.Application.UnitOfWork.Repositories
         public Task<Album?> GetByIdAsync(int id);
 
         public Task<IEnumerable<Album>> ListAsync(
-            int pageNum, int pageSize, int? search);
+            int pageNum, int pageSize, string? search);
 
         public void Delete(Album album);
 
