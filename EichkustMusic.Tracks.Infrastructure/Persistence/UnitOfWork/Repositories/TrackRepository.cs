@@ -35,7 +35,8 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Track>> ListAsync(int pageNum, int pageSize, string? search)
+        public async Task<IEnumerable<Track>> ListAsync(
+            int pageNum, int pageSize, string? search)
         {
             IQueryable<Track> tracks = _dbContext.Tracks;
 
