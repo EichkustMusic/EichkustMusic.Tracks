@@ -8,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+builder.Services.AddApiVersioning(
+    o => o.DefaultApiVersion = new Asp.Versioning.ApiVersion(1,0))
+    .AddApiExplorer();
+
 builder.Services.AddPersistence(builder.Configuration);
 
 builder.Services.AddSingleton<IS3Storage>(ci =>
