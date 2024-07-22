@@ -1,5 +1,4 @@
 ﻿using Amazon.S3.Model;
-using dotenv.net;
 using EichkustMusic.Tracks.Application.S3;
 using EichkustMusic.Tracks.Infrastructure.S3;
 using Microsoft.Extensions.Configuration;
@@ -46,7 +45,7 @@ namespace EichkustMusic.Tracks.Testing.InfrastructureTests.S3Tests
         [Test]
         public void S3Storage_GetPreSignedUploadUrl_ReturnsUrlIfCorrectBucketNameAndCredentials()
         {
-            var actual = _s3Storage.GetPreSignedUploadUrl(BucketNames.TrackCovers);
+            var actual = _s3Storage.GetPreSignedUploadUrl(BucketNames.MusicFiles);
 
             Console.WriteLine(actual);
 

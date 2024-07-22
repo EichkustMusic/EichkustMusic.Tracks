@@ -26,6 +26,7 @@ namespace EichkustMusic.Tracks.Application.DTOs.Track
             return new Domain.Entities.Track
             {
                 Description = Description,
+                Name = Name,
                 UserId = UserId,
                 AlbumId = AlbumId,
             };

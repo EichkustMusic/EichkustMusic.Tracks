@@ -5,6 +5,7 @@ using EichkustMusic.Tracks.Application.S3;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,11 @@ namespace EichkustMusic.Tracks.Infrastructure.S3
         {
             var accessKey = configuration["S3:AccessKey"];
             var secretKey = configuration["S3:SecretKey"];
+
+            if (accessKey == null || secretKey == null)
+            {
+                throw new Exception("Secret key or access key for S3 is null");
+            }
 
             var s3Config = new AmazonS3Config()
             {

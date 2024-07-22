@@ -28,6 +28,7 @@ namespace EichkustMusic.Tracks.Application.DTOs.Track
             return new TrackDTO
             {
                 Id = track.Id,
+                Name = track.Name,
                 Description = track.Description,
                 UserId = track.UserId,
                 CoverImagePath = track.CoverImagePath,
