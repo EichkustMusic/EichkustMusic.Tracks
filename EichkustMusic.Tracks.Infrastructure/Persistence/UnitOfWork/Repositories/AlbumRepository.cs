@@ -31,13 +31,15 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
         public async Task<Album?> GetByIdAsync(int id)
         {
             return await _dbContext.Albums
+                .Include(a => a.Tracks)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<IEnumerable<Album>> ListAsync(
             int pageNum, int pageSize, string? search)
         {
-            IQueryable<Album> albums = _dbContext.Albums;
+            IQueryable<Album> albums = _dbContext.Albums
+                .Include(a => a.Tracks);
 
             if (search != null)
             {

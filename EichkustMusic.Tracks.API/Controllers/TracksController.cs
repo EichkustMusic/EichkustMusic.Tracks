@@ -35,7 +35,9 @@ namespace EichkustMusic.Tracks.API.Controllers
 
             foreach (var track in tracks)
             {
-                trackDTOs.Add(TrackDTO.MapFromTrack(track));
+                var trackDTO = TrackDTO.MapFromTrack(track, withAlbum: true);
+
+                trackDTOs.Add(trackDTO);
             }
 
             return Ok(trackDTOs);

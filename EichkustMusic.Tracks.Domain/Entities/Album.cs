@@ -21,6 +21,8 @@ namespace EichkustMusic.Tracks.Domain.Entities
         [MaxLength(1024)]
         public string? Description { get; set; }
 
+        public string? CoverImagePath { get; set; }
+
         public ICollection<Track> Tracks { get; set; } = new List<Track>();
     }
 }
