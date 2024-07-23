@@ -13,6 +13,9 @@ namespace EichkustMusic.Tracks.Application.DTOs.Playlist
         [MaxLength(64)]
         public string Name { get; set; } = null!;
 
+        [Required]
+        public int UserId { get; set; }
+
         [MaxLength(1024)]
         public string Description { get; set; } = null!;
 
@@ -23,7 +26,8 @@ namespace EichkustMusic.Tracks.Application.DTOs.Playlist
             return new Domain.Entities.Playlist
             {
                 Name = Name,
-                Description = Description
+                Description = Description,
+                UserId = UserId,
             };
         }
     }
