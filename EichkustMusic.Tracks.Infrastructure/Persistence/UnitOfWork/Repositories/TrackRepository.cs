@@ -31,14 +31,35 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
         public async Task<Track?> GetByIdAsync(int id)
         {
             return await _dbContext.Tracks
-                .Where(t => t.Id == id)
-                .FirstOrDefaultAsync();
+                .Include(t => t.Album)
+                .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<IEnumerable<Track>> ListAsync(
             int pageNum, int pageSize, string? search)
         {
-            IQueryable<Track> tracks = _dbContext.Tracks;
+            IQueryable<Track> tracks = _dbContext.Tracks
+                .Include(t => t.Album)
+                .Select(t => new Track()
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Description = t.Description,
+                    UserId = t.UserId,
+                    CoverImagePath = t.CoverImagePath,
+                    MusicPath = t.MusicPath,
+                    AlbumId = t.AlbumId,
+                    Album =
+                        t.Album != null
+                        ? new Album()
+                        {
+                            Id = t.Album.Id,
+                            Name = t.Album.Name,
+                            Description = t.Album.Description,
+                            Tracks = new List<Track>()
+                        }
+                        : null
+                });
 
             if (search != null)
             {

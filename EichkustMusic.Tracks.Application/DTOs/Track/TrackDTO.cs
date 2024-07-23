@@ -23,30 +23,32 @@ namespace EichkustMusic.Tracks.Application.DTOs.Track
 
         public AlbumDTO? Album { get; set; }
 
-        public static TrackDTO MapFromTrack(Domain.Entities.Track track)
+        public static TrackDTO MapFromTrack(Domain.Entities.Track track, bool withAlbum = true)
         {
             return new TrackDTO
             {
                 Id = track.Id,
+                Name = track.Name,
                 Description = track.Description,
                 UserId = track.UserId,
                 CoverImagePath = track.CoverImagePath,
                 MusicPath = track.MusicPath,
                 Album = 
-                    track.Album is null
+                    track.Album == null || withAlbum == false
                     ? null
                     : AlbumDTO.MapFromAlbum(track.Album)
             };
         }
 
         public static List<TrackDTO> MapFromTracksListToTrackDTOsList(
-            List<Domain.Entities.Track> tracks)
+            IEnumerable<Domain.Entities.Track> tracks, bool withAlbums = false)
         {
             var trackDTOs = new List<TrackDTO>();
 
-            tracks.ForEach(t =>
-                trackDTOs.Add(
-                    MapFromTrack(t)));
+            foreach (var track in tracks)
+            {
+                trackDTOs.Add(MapFromTrack(track, withAlbum: withAlbums));
+            }
 
             return trackDTOs;
         }

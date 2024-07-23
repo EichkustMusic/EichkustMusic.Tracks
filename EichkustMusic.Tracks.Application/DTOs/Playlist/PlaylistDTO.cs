@@ -24,8 +24,7 @@ namespace EichkustMusic.Tracks.Application.DTOs.Playlist
                 Id = playlist.Id,
                 Name = playlist.Name,
                 Description = playlist.Description,
-                Tracks = TrackDTO.MapFromTracksListToTrackDTOsList(
-                    (List<Domain.Entities.Track>)playlist.Tracks)
+                Tracks = TrackDTO.MapFromTracksListToTrackDTOsList(playlist.Tracks)
             };
         }
     }

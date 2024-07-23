@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EichkustMusic.Tracks.Application.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -14,8 +15,12 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence
         public static IServiceCollection AddPersistence(
             this IServiceCollection services, IConfigurationManager configurationManager)
         {
-            return services.AddDbContext<TracksDbContext>(o =>
+            services.AddDbContext<TracksDbContext>(o =>
                 o.UseNpgsql(configurationManager.GetConnectionString("TracksDb")));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
+
+            return services;
         }
     }
 }

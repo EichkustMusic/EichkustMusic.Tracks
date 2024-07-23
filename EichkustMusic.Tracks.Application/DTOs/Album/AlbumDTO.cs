@@ -12,18 +12,23 @@ namespace EichkustMusic.Tracks.Application.DTOs.Album
     {
         public int Id { get; set; }
 
+        public string Name { get; set; } = null!;
+
         public string? Description { get; set; }
 
         public IEnumerable<TrackDTO> Tracks { get; set; } = new List<TrackDTO>();
+
+        public string? CoverImagePath { get; set; }
 
         public static AlbumDTO MapFromAlbum(Domain.Entities.Album album)
         {
             return new AlbumDTO
             {
                 Id = album.Id,
+                Name = album.Name,
                 Description = album.Description,
-                Tracks = TrackDTO.MapFromTracksListToTrackDTOsList(
-                    (List<Domain.Entities.Track>)album.Tracks)
+                Tracks = TrackDTO.MapFromTracksListToTrackDTOsList(album.Tracks),
+                CoverImagePath = album.CoverImagePath,
             };
         }
     }

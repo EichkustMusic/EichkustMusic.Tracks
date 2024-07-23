@@ -6,7 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddNewtonsoftJson();
+
+builder.Services.AddApiVersioning(
+    o => o.DefaultApiVersion = new Asp.Versioning.ApiVersion(1,0))
+    .AddApiExplorer();
 
 builder.Services.AddPersistence(builder.Configuration);
 

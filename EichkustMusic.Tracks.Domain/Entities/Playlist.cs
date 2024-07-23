@@ -23,11 +23,13 @@ namespace EichkustMusic.Tracks.Domain.Entities
 
         public ICollection<PlaylistTrack> PlaylistTracks { get; set; } = new List<PlaylistTrack>();
 
-        public IEnumerable<Track> Tracks
+        public ICollection<Track> Tracks
         {
             get
             {
-                return PlaylistTracks.Select(pt => pt.Track);
+                return PlaylistTracks
+                    .Select(pt => pt.Track)
+                    .ToList();
             }
         }
     }

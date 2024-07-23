@@ -23,8 +23,10 @@ namespace EichkustMusic.Tracks.Application.DTOs.Album
             {
                 Id = album.Id,
                 Description = album.Description,
-                Tracks = TrackDTO.MapFromTracksListToTrackDTOsList(
-                    (List<Domain.Entities.Track>)album.Tracks)
+                Tracks = 
+                    album.Tracks != null
+                    ? TrackDTO.MapFromTracksListToTrackDTOsList(album.Tracks)
+                    : []
             };
         }
     }

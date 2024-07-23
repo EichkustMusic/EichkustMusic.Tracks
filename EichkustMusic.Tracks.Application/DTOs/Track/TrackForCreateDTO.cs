@@ -21,13 +21,17 @@ namespace EichkustMusic.Tracks.Application.DTOs.Track
 
         public int? AlbumId { get; set; }
 
+        public string? CoverImagePath { get; set; }
+
         public Domain.Entities.Track MapToTrack()
         {
             return new Domain.Entities.Track
             {
                 Description = Description,
+                Name = Name,
                 UserId = UserId,
                 AlbumId = AlbumId,
+                CoverImagePath = CoverImagePath,
             };
         }
     }
