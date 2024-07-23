@@ -11,6 +11,8 @@ namespace EichkustMusic.Tracks.Application.DTOs.Playlist
     {
         public int Id { get; set; }
 
+        public int UserId { get; set; }
+
         public string Name { get; set; } = null!;
 
         public string? Description { get; set; }
@@ -24,7 +26,8 @@ namespace EichkustMusic.Tracks.Application.DTOs.Playlist
                 Id = playlist.Id,
                 Name = playlist.Name,
                 Description = playlist.Description,
-                Tracks = TrackDTO.MapFromTracksListToTrackDTOsList(playlist.Tracks)
+                UserId = playlist.UserId,
+                Tracks = TrackDTO.MapFromTracksListToTrackDTOsList(playlist.Tracks),
             };
         }
     }
