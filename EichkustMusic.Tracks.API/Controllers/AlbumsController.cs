@@ -103,7 +103,7 @@ namespace EichkustMusic.Tracks.API.Controllers
                 return NotFound(nameof(id));
             }
 
-            _unitOfWork.AlbumRepository.Delete(album);
+            await _unitOfWork.AlbumRepository.DeleteAsync(album);
 
             await _unitOfWork.SaveChangesAsync();
 

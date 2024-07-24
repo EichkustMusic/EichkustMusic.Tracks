@@ -1,4 +1,5 @@
-﻿using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
+﻿using EichkustMusic.Tracks.Application.S3;
+using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
 using EichkustMusic.Tracks.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,10 +13,13 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
     public class TrackRepository : ITrackRepository
     {
         private readonly TracksDbContext _dbContext;
+        private readonly IS3Storage _s3;
 
-        public TrackRepository(TracksDbContext dbContext)
+        public TrackRepository(
+            TracksDbContext dbContext, IS3Storage s3)
         {
             _dbContext = dbContext;
+            _s3 = s3;
         }
 
         public void Add(Track track)
@@ -23,8 +27,18 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
             _dbContext.Add(track);
         }
 
-        public void Delete(Track track)
+        public async Task DeleteAsync(Track track)
         {
+            if (track.CoverImagePath != null)
+            {
+                await _s3.DeleteFileAsync(track.CoverImagePath);
+            }
+
+            if (track.MusicPath != null)
+            {
+                await _s3.DeleteFileAsync(track.MusicPath);
+            }
+
             _dbContext.Remove(track);
         }
 

@@ -14,7 +14,7 @@ namespace EichkustMusic.Tracks.Application.UnitOfWork.Repositories
         Task<IEnumerable<Track>> ListAsync(
             int pageNum, int pageSize, string? search);
 
-        void Delete(Track track);
+        Task DeleteAsync(Track track);
 
         void Add(Track track);
     }

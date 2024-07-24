@@ -97,7 +97,7 @@ namespace EichkustMusic.Tracks.API.Controllers
                 return NotFound(nameof(id));
             }
 
-            _unitOfWork.TrackRepository.Delete(track);
+            await _unitOfWork.TrackRepository.DeleteAsync(track);
 
             await _unitOfWork.SaveChangesAsync();
 

@@ -2,10 +2,14 @@
 using EichkustMusic.Tracks.Domain.Entities;
 using EichkustMusic.Tracks.Infrastructure.Persistence;
 using EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositories;
+using EichkustMusic.Tracks.Infrastructure.S3;
 using EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests.Mocks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Moq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -19,6 +23,30 @@ namespace EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests
 
         public AlbumRepositoryTests()
         {
+            // Configure S3
+            // .env file should be created at bin/Env/net8.0/
+            var directory = $"{Directory.GetCurrentDirectory()}" + "/.env";
+
+            Debug.WriteLine(directory);
+
+            DotNetEnv.Env.Load(directory);
+
+            var configurationManagerMock = new Mock<IConfigurationManager>();
+
+            var accessKey = Environment.GetEnvironmentVariable("S3_ACCESS_KEY");
+            var secretKey = Environment.GetEnvironmentVariable("S3_SECRET_KEY");
+
+            configurationManagerMock
+                .Setup(cm => cm["S3:AccessKey"])
+                .Returns(accessKey);
+
+            configurationManagerMock
+                .Setup(cm => cm["S3:SecretKey"])
+                .Returns(secretKey);
+
+            var s3 = new S3Storage(configurationManagerMock.Object);
+
+            // Configure DbContext
             var dbContextOptions = new DbContextOptionsBuilder<TracksDbContext>()
                 .UseInMemoryDatabase("TracksDb")
                 .Options;
@@ -28,7 +56,8 @@ namespace EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests
             dbContext.AddRange(AlbumDbSetMock.Albums);
             dbContext.SaveChanges();
 
-            _albumRepository = new AlbumRepository(dbContext);
+            // Configure repository
+            _albumRepository = new AlbumRepository(dbContext ,s3);
         }
 
         [Test]
