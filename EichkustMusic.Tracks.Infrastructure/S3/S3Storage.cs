@@ -34,6 +34,24 @@ namespace EichkustMusic.Tracks.Infrastructure.S3
             _s3 = new AmazonS3Client(accessKey, secretKey, s3Config);
         }
 
+        public async Task<bool> DeleteFileAsync(string fileURL)
+        {
+            var splitedUrl = fileURL.Split("/");
+
+            var fileName = splitedUrl[^1];
+            var bucketName = splitedUrl[^2];
+
+            var deleteFileRequst = new DeleteObjectRequest()
+            {
+                BucketName = bucketName,
+                Key = fileName,
+            };
+
+            var response = await _s3.DeleteObjectAsync(deleteFileRequst);
+
+            return response.HttpStatusCode.IsSuccess();
+        }
+
         public string GetPreSignedUploadUrl(string bucketName)
         {
             var objectName = Guid.NewGuid().ToString();

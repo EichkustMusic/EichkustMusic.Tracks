@@ -51,5 +51,14 @@ namespace EichkustMusic.Tracks.Testing.InfrastructureTests.S3Tests
 
             Assert.That(actual, Is.Not.Null);
         }
+
+        [Test]
+        public async Task S3Storage_DeleteFileAsync_SuccessIfCorrectUrl()
+        {
+            var actual = await _s3Storage.DeleteFileAsync(
+                "https://s3.eu-west-2.wasabisys.com/eichkust-album-covers/01.png");
+
+            Assert.That(actual, Is.True);
+        }
     }
 }
