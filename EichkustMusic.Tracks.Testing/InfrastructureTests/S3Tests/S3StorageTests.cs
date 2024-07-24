@@ -53,12 +53,30 @@ namespace EichkustMusic.Tracks.Testing.InfrastructureTests.S3Tests
         }
 
         [Test]
-        public async Task S3Storage_DeleteFileAsync_SuccessIfCorrectUrl()
+        public async Task S3Storage_DeleteFileAsync_TrueIfCorrectUrl()
         {
             var actual = await _s3Storage.DeleteFileAsync(
                 "https://s3.eu-west-2.wasabisys.com/eichkust-album-covers/01.png");
 
             Assert.That(actual, Is.True);
+        }
+
+        [Test]
+        public async Task S3Storage_DoesFileExistAsync_TrueIfCorrectUrl()
+        {
+            var actual = await _s3Storage.DoesFileExistAsync(
+                "https://s3.eu-west-2.wasabisys.com/eichkust-album-covers/01.png");
+
+            Assert.That(actual, Is.True);
+        }
+
+        [Test]
+        public async Task S3Storage_DoesFileExistAsync_FalseIfInvalidUrl()
+        {
+            var actual = await _s3Storage.DoesFileExistAsync(
+                "https://s3.eu-west-2.wasabisys.com/eichkust-album-covers/02.png");
+
+            Assert.That(actual, Is.False);
         }
     }
 }
