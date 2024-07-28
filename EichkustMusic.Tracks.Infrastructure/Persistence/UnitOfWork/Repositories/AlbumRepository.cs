@@ -1,4 +1,5 @@
 ﻿using EichkustMusic.Tracks.Application.S3;
+using EichkustMusic.Tracks.Application.S3.Exceptions;
 using EichkustMusic.Tracks.Application.UnitOfWork.Exceptions;
 using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
 using EichkustMusic.Tracks.Domain.Entities;
@@ -24,9 +25,24 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
             _s3 = s3;
         }
 
-        public void Add(Album album)
+        public async Task AddAsync(Album album)
         {
             _dbContext.Add(album);
+
+            foreach (var track in album.Tracks)
+            {
+                if (track.CoverImagePath != null)
+                {
+                    if (await _s3.DeleteFileAsync(track.CoverImagePath) == true)
+                    {
+                        track.CoverImagePath = null;
+                    } 
+                    else
+                    {
+                        throw new S3FileDeleteException($"Cannot delete cover image of track {track.Id}.");
+                    }
+                }                
+            }
         }
 
         public async Task ApplyPatchDocumentAsyncTo(
