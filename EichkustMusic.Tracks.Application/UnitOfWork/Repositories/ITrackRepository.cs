@@ -1,4 +1,5 @@
 ﻿using EichkustMusic.Tracks.Domain.Entities;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,9 @@ namespace EichkustMusic.Tracks.Application.UnitOfWork.Repositories
         Task<IEnumerable<Track>> ListAsync(
             int pageNum, int pageSize, string? search);
 
-        void Delete(Track track);
+        Task DeleteAsync(Track track);
+
+        Task ApplyPatchDocumentAsyncTo(Track track, JsonPatchDocument patchDocument);
 
         void Add(Track track);
     }

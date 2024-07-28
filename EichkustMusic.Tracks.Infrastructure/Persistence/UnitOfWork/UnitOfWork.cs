@@ -1,4 +1,5 @@
-﻿using EichkustMusic.Tracks.Application.UnitOfWork;
+﻿using EichkustMusic.Tracks.Application.S3;
+using EichkustMusic.Tracks.Application.UnitOfWork;
 using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
 using EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositories;
 using System;
@@ -19,12 +20,13 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork
 
         public IPlaylistRepository PlaylistRepository { get; }
 
-        public UnitOfWork(TracksDbContext dbContext)
+        public UnitOfWork(
+            TracksDbContext dbContext, IS3Storage s3)
         {
             _dbContext = dbContext;
 
-            TrackRepository = new TrackRepository(dbContext);
-            AlbumRepository = new AlbumRepository(dbContext);
+            TrackRepository = new TrackRepository(dbContext, s3);
+            AlbumRepository = new AlbumRepository(dbContext, s3);
             PlaylistRepository = new PlaylistRepository(dbContext);
         }
 

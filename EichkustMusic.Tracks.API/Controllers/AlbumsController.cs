@@ -2,6 +2,7 @@
 using EichkustMusic.Tracks.Application.DTOs.Album;
 using EichkustMusic.Tracks.Application.S3;
 using EichkustMusic.Tracks.Application.UnitOfWork;
+using EichkustMusic.Tracks.Application.UnitOfWork.Exceptions;
 using EichkustMusic.Tracks.Infrastructure.S3;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
@@ -103,7 +104,7 @@ namespace EichkustMusic.Tracks.API.Controllers
                 return NotFound(nameof(id));
             }
 
-            _unitOfWork.AlbumRepository.Delete(album);
+            await _unitOfWork.AlbumRepository.DeleteAsync(album);
 
             await _unitOfWork.SaveChangesAsync();
 
@@ -122,11 +123,19 @@ namespace EichkustMusic.Tracks.API.Controllers
                 return NotFound(nameof(id));
             }
 
-            patchDocument.ApplyTo(album);
+            try
+            {
+                await _unitOfWork.AlbumRepository
+                    .ApplyPatchDocumentAsyncTo(album, patchDocument);
 
-            await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (NewFileNotFound exception)
+            {
+                return BadRequest(exception.Message);
+            }
         }
     }
     #endregion
