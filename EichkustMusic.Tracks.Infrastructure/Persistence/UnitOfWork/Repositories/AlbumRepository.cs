@@ -29,20 +29,8 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
         {
             _dbContext.Add(album);
 
-            foreach (var track in album.Tracks)
-            {
-                if (track.CoverImagePath != null)
-                {
-                    if (await _s3.DeleteFileAsync(track.CoverImagePath) == true)
-                    {
-                        track.CoverImagePath = null;
-                    } 
-                    else
-                    {
-                        throw new S3FileDeleteException($"Cannot delete cover image of track {track.Id}.");
-                    }
-                }                
-            }
+            // Reset all tracks covers
+            await SetAlbumTracksCoversAsync(album, null);
         }
 
         public async Task ApplyPatchDocumentAsyncTo(
@@ -71,10 +59,16 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
 
                 // Delete old files from S3
                 if (
-                    s3Operation.path.ToLower() == coverImagePath
-                    && album.CoverImagePath != null)
+                    s3Operation.path.ToLower() == coverImagePath)
                 {
-                    await _s3.DeleteFileAsync(album.CoverImagePath);
+                    if (album.CoverImagePath != null)
+                    {
+                        await _s3.DeleteFileAsync(album.CoverImagePath);
+                    }
+
+                    // Set new cover image to all of albums tracks
+                    await SetAlbumTracksCoversAsync(album, album.CoverImagePath);
+                    
                 }
             }
 
@@ -123,6 +117,38 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
                 .Skip((pageNum - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+        }
+
+        /// <summary>
+        /// Change track covers for all tracks of album.
+        /// If <c>value</c> if <c>null</c> that old track covers are deleting from S3.
+        /// </summary>
+        /// <param name="album">Album for tracks for which you need to change track covers</param>
+        /// <param name="value">New track cover</param>
+        /// <returns></returns>
+        /// <exception cref="S3FileDeleteException">Throws if deletion is unsuccessful</exception>
+        internal async Task SetAlbumTracksCoversAsync(Album album, string? value)
+        {
+            foreach (var track in album.Tracks)
+            {
+                // Delete old tracks covers if new value is null (use for reset all tracks covers of album)
+                if (track.CoverImagePath != null)
+                {
+                    if (await _s3.DeleteFileAsync(track.CoverImagePath) == true)
+                    {
+                        track.CoverImagePath = null;
+                    }
+                    else
+                    {
+                        throw new S3FileDeleteException($"Cannot delete cover image of track {track.Id}.");
+                    }
+
+                    return;
+                }
+
+                // Set new value if a file exist
+                track.CoverImagePath = value;
+            }
         }
     }
 }
