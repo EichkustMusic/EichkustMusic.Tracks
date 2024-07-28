@@ -1,6 +1,8 @@
 ﻿using EichkustMusic.Tracks.Application.S3;
+using EichkustMusic.Tracks.Application.UnitOfWork.Exceptions;
 using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
 using EichkustMusic.Tracks.Domain.Entities;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,51 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
         public void Add(Track track)
         {
             _dbContext.Add(track);
+        }
+
+        public async Task ApplyPatchDocumentAsyncTo(
+            Track track, JsonPatchDocument patchDocument)
+        {
+            const string coverImagePath = "/coverimagepath";
+            const string musicPath = "/musicpath";
+
+            var s3Paths = new List<string>() {
+                coverImagePath,
+                musicPath
+            };
+
+            var s3Operations = patchDocument.Operations
+                .Where(o => s3Paths.Contains(o.path.ToLower()));
+
+            foreach (var s3Operation in s3Operations)
+            {
+                var filePath = (string)s3Operation.value;
+
+                // Check if new file exist
+                var doesFileExist = await _s3.DoesFileExistAsync(filePath);
+
+                if (doesFileExist == false)
+                {
+                    throw new NewFileNotFound(filePath);
+                }
+
+                // Delete old files from S3
+                if (
+                    s3Operation.path.ToLower() == musicPath
+                    && track.MusicPath != null)
+                {
+                    await _s3.DeleteFileAsync(track.MusicPath);
+                }
+
+                if (
+                    s3Operation.path.ToLower() == coverImagePath
+                    && track.CoverImagePath != null)
+                {
+                    await _s3.DeleteFileAsync(track.CoverImagePath);
+                }
+            }
+
+            patchDocument.ApplyTo(track);
         }
 
         public async Task DeleteAsync(Track track)

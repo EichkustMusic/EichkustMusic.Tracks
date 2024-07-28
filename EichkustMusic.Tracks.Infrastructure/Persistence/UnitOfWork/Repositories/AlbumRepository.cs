@@ -1,6 +1,8 @@
 ﻿using EichkustMusic.Tracks.Application.S3;
+using EichkustMusic.Tracks.Application.UnitOfWork.Exceptions;
 using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
 using EichkustMusic.Tracks.Domain.Entities;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,42 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
         public void Add(Album album)
         {
             _dbContext.Add(album);
+        }
+
+        public async Task ApplyPatchDocumentAsyncTo(
+            Album album, JsonPatchDocument patchDocument)
+        {
+            const string coverImagePath = "/coverimagepath";
+
+            var s3Paths = new List<string>() {
+                coverImagePath,
+            };
+
+            var s3Operations = patchDocument.Operations
+                .Where(o => s3Paths.Contains(o.path.ToLower()));
+
+            foreach (var s3Operation in s3Operations)
+            {
+                var filePath = (string)s3Operation.value;
+
+                // Check if new file exist
+                var doesFileExist = await _s3.DoesFileExistAsync(filePath);
+
+                if (doesFileExist == false)
+                {
+                    throw new NewFileNotFound(filePath);
+                }
+
+                // Delete old files from S3
+                if (
+                    s3Operation.path.ToLower() == coverImagePath
+                    && album.CoverImagePath != null)
+                {
+                    await _s3.DeleteFileAsync(album.CoverImagePath);
+                }
+            }
+
+            patchDocument.ApplyTo(album);
         }
 
         public async Task DeleteAsync(Album album)

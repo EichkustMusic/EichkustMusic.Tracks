@@ -19,12 +19,16 @@ using Amazon.S3;
 using Microsoft.Extensions.Configuration;
 using EichkustMusic.Tracks.Infrastructure.S3;
 using EichkustMusic.Tracks.Application.S3;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using EichkustMusic.Tracks.Application.UnitOfWork.Exceptions;
 
 namespace EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests
 {
     public class TrackRepositoryTests
     {
         private readonly ITrackRepository _trackRepository;
+        private readonly TracksDbContext _dbContext;
         private readonly IS3Storage _s3;
 
         public TrackRepositoryTests()
@@ -64,6 +68,8 @@ namespace EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests
             mockDbContext.AddRange(TrackDbSetMock.Mock);
 
             mockDbContext.SaveChanges();
+
+            _dbContext = mockDbContext;
 
             // Configure repository
             _trackRepository = new TrackRepository(mockDbContext, s3);
@@ -178,11 +184,73 @@ namespace EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests
 
             await _trackRepository.DeleteAsync(track);
 
+            await _dbContext.SaveChangesAsync();
+
             var doesCoverExist = await _s3.DoesFileExistAsync(coverPath);
             Assert.That(doesCoverExist, Is.False);
 
             var doesMusicExist = await _s3.DoesFileExistAsync(musicPath);
             Assert.That(doesMusicExist, Is.False);
+        }
+
+        [Test]
+        public async Task TrackRepository_ApplyPatchDocumentAsyncTo_DeletesOldMusicFromS3WhenItChanges()
+        {
+            var track = await _trackRepository.GetByIdAsync(4);
+
+            if (track == null)
+            {
+                throw new Exception("Track not found");
+            }
+
+            var oldMusicPath = track.MusicPath!;
+
+            var patchDocument = new JsonPatchDocument();
+
+            patchDocument.Operations.Add(new Operation()
+            {
+                op = "add",
+                path = "/MusicPath",
+                value = "https://s3.eu-west-2.wasabisys.com/eichkust-music-files/02.mp3"
+            });
+                
+            await _trackRepository.ApplyPatchDocumentAsyncTo(track, patchDocument);
+
+            await _dbContext.SaveChangesAsync();
+
+            var doesOldCoverFileExist = await _s3.DoesFileExistAsync(oldMusicPath);
+
+            Assert.That(doesOldCoverFileExist, Is.False);
+        }
+
+        [Test]
+        public async Task TrackRepository_ApplyPatchDocumentAsyncTo_ThrowsIfNewMusicDoesNotExist()
+        {
+            var track = await _trackRepository.GetByIdAsync(4);
+
+            if (track == null)
+            {
+                throw new Exception("Track not found");
+            }
+
+            var coverPath = track.CoverImagePath!;
+            var musicPath = track.MusicPath!;
+
+            var patchDocument = new JsonPatchDocument();
+
+            patchDocument.Operations.Add(new Operation()
+            {
+                op = "add",
+                path = "/MusicPath",
+                value = "https://s3.eu-west-2.wasabisys.com/eichkust-music-files/03.mp3"
+            });
+
+            var oldCoverImagePath = track.CoverImagePath;
+
+            await _dbContext.SaveChangesAsync();
+
+            Assert.ThrowsAsync<NewFileNotFound>(async () =>
+                await _trackRepository.ApplyPatchDocumentAsyncTo(track, patchDocument));
         }
     }
 }
