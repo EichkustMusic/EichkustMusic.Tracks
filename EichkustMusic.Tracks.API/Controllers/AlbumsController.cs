@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using EichkustMusic.Tracks.Application.DTOs.Album;
 using EichkustMusic.Tracks.Application.S3;
+using EichkustMusic.Tracks.Application.S3.Exceptions;
 using EichkustMusic.Tracks.Application.UnitOfWork;
 using EichkustMusic.Tracks.Application.UnitOfWork.Exceptions;
 using EichkustMusic.Tracks.Infrastructure.S3;
@@ -78,7 +79,7 @@ namespace EichkustMusic.Tracks.API.Controllers
                 album.Tracks.Add(track);
             }
 
-            _unitOfWork.AlbumRepository.Add(album);
+            await _unitOfWork.AlbumRepository.AddAsync(album);
 
             await _unitOfWork.SaveChangesAsync();
 

@@ -19,6 +19,6 @@ namespace EichkustMusic.Tracks.Application.UnitOfWork.Repositories
 
         public Task ApplyPatchDocumentAsyncTo(Album album, JsonPatchDocument patchDocument);
 
-        public void Add(Album album);
+        public Task AddAsync(Album album);
     }
 }
