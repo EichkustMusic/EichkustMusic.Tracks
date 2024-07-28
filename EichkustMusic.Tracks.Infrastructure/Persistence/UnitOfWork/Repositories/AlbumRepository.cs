@@ -82,6 +82,8 @@ namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositorie
                 await _s3.DeleteFileAsync(album.CoverImagePath);
             }
 
+            await SetAlbumTracksCoversAsync(album, null);
+
             _dbContext.Remove(album);
         }
 
