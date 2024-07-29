@@ -18,13 +18,13 @@ namespace EichkustMusic.Tracks.API.Controllers
     public class AlbumsController : ControllerBase
     {
         public IUnitOfWork _unitOfWork;
-        public IS3Storage _s3Storage;
+        public IS3Storage _s3;
 
         public AlbumsController(
-            IUnitOfWork unitOfWork, IS3Storage s3Storage)
+            IUnitOfWork unitOfWork, IS3Storage s3)
         {
             _unitOfWork = unitOfWork;
-            _s3Storage = s3Storage;
+            _s3 = s3;
         }
 
         [HttpGet("{id}")]
@@ -85,7 +85,7 @@ namespace EichkustMusic.Tracks.API.Controllers
 
             var albumDTO = AlbumCreateResultDTO.MapFromAlbum(album);
 
-            albumDTO.PathToUploadCoverImage = _s3Storage.GetPreSignedUploadUrl(BucketNames.AlbumCovers);
+            albumDTO.PathToUploadCoverImage = _s3.GetPreSignedUploadUrl(BucketNames.AlbumCovers);
 
             return CreatedAtAction(nameof(GetById), new
             {
@@ -137,6 +137,25 @@ namespace EichkustMusic.Tracks.API.Controllers
             {
                 return BadRequest(exception.Message);
             }
+        }
+
+        [HttpGet("get_presigned_upload_url_for/{bucketName}")]
+        public ActionResult<string> GetPresignedUploadURL(
+            string bucketName)
+        {
+            string bucketNameForS3;
+
+            if (bucketName == "cover_image")
+            {
+                bucketNameForS3 = BucketNames.AlbumCovers;
+            }
+            else
+            {
+                return BadRequest(nameof(bucketName));
+            }
+
+
+            return Ok(_s3.GetPreSignedUploadUrl(bucketNameForS3));
         }
     }
     #endregion
