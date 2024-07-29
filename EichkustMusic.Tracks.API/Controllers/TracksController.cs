@@ -131,6 +131,29 @@ namespace EichkustMusic.Tracks.API.Controllers
                 return BadRequest(exception.Message);
             }
         }
+
+        [HttpGet("get_presigned_upload_url_for/{bucketName}")]
+        public ActionResult<string> GetPresignedUploadURL(
+            string bucketName)
+        {
+            string bucketNameForS3;
+
+            if (bucketName == "cover_image") 
+            {
+                bucketNameForS3 = BucketNames.TrackCovers;
+            }
+            else if (bucketName == "music_file")
+            {
+                bucketNameForS3 = BucketNames.MusicFiles;
+            }
+            else
+            {
+                return BadRequest(nameof(bucketName));
+            }
+
+            
+            return Ok(_s3.GetPreSignedUploadUrl(bucketNameForS3));
+        }
     }
     #endregion
 }
