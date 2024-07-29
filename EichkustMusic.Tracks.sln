@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EichkustMusic.Tracks.Applic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EichkustMusic.Tracks.Infrastructure", "EichkustMusic.Tracks.Infrastructure\EichkustMusic.Tracks.Infrastructure.csproj", "{DC3D4BA2-0AFD-4580-ABF0-D69FAB91C827}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EichkustMusic.Tracks.Testing", "EichkustMusic.Tracks.Testing\EichkustMusic.Tracks.Testing.csproj", "{4E71C0E6-D167-4EE8-8EF8-F23A966C7A16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EichkustMusic.Tracks.Testing", "EichkustMusic.Tracks.Testing\EichkustMusic.Tracks.Testing.csproj", "{4E71C0E6-D167-4EE8-8EF8-F23A966C7A16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8BE40682-9B7C-4FF5-A5AA-D7C32900D77A}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
