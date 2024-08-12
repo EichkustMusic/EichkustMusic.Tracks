@@ -14,7 +14,8 @@
     // Wasabi S3
     "S3": {
       "AccessKey": ...,
-      "SecretKey": ...
+      "SecretKey": ...,
+      "ServiceUrl": ...
     }
   }
 ```
@@ -25,6 +26,7 @@
 ```
 S3_ACCESS_KEY= ...
 S3_SECRET_KEY= ...
+S3_SERVICE_URL= ...
 ```
 2. The easiest way to run test is to use *Test Explorer* in *Visual Studio* (https://learn.microsoft.com/en-us/visualstudio/test/using-code-coverage-to-determine-how-much-code-is-being-tested)
 - **You should run each test separately!**

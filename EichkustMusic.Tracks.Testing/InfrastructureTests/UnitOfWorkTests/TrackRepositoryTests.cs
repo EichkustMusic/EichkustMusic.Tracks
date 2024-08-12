@@ -35,6 +35,7 @@ namespace EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests
 
             var accessKey = Environment.GetEnvironmentVariable("S3_ACCESS_KEY");
             var secretKey = Environment.GetEnvironmentVariable("S3_SECRET_KEY");
+            var serviceUrl = Environment.GetEnvironmentVariable("S3_SERVICE_URL");
 
             configurationManagerMock
                 .Setup(cm => cm["S3:AccessKey"])
@@ -42,6 +43,10 @@ namespace EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests
 
             configurationManagerMock
                 .Setup(cm => cm["S3:SecretKey"])
+                .Returns(secretKey);
+
+            configurationManagerMock
+                .Setup(cm => cm["S3:ServiceUrl"])
                 .Returns(secretKey);
 
             var s3 = new S3Storage(configurationManagerMock.Object);
