@@ -1,6 +1,5 @@
-using EichkustMusic.Tracks.Application.S3;
-using EichkustMusic.Tracks.Infrastructure.S3;
 using static EichkustMusic.Tracks.Infrastructure.Persistence.DependencyInjection;
+using static EichkustMusic.S3.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +15,7 @@ builder.Services.AddApiVersioning(
 
 builder.Services.AddPersistence(builder.Configuration);
 
-builder.Services.AddSingleton<IS3Storage>(ci =>
-    new S3Storage(builder.Configuration));
+builder.Services.AddS3(builder.Configuration);
 
 var app = builder.Build();
 

@@ -1,12 +1,7 @@
-﻿using EichkustMusic.Tracks.Application.S3;
+﻿using EichkustMusic.S3;
 using EichkustMusic.Tracks.Application.UnitOfWork;
 using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
 using EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork
 {

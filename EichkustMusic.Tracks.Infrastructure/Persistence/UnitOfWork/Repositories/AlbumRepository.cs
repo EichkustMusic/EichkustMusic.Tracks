@@ -1,15 +1,10 @@
-﻿using EichkustMusic.Tracks.Application.S3;
-using EichkustMusic.Tracks.Application.S3.Exceptions;
+﻿using EichkustMusic.S3;
+using EichkustMusic.S3.Exceptions;
 using EichkustMusic.Tracks.Application.UnitOfWork.Exceptions;
 using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
 using EichkustMusic.Tracks.Domain.Entities;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositories
 {

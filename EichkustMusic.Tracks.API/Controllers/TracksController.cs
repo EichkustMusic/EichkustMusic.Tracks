@@ -1,12 +1,12 @@
 ﻿using Asp.Versioning;
 using EichkustMusic.Tracks.Application.DTOs.Track;
-using EichkustMusic.Tracks.Application.S3;
 using EichkustMusic.Tracks.Infrastructure.S3;
 using EichkustMusic.Tracks.Application.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
 using EichkustMusic.Tracks.Application.UnitOfWork.Exceptions;
+using EichkustMusic.S3;
 
 namespace EichkustMusic.Tracks.API.Controllers
 {

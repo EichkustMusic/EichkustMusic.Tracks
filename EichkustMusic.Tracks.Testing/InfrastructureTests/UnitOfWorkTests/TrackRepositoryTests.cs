@@ -1,13 +1,5 @@
 ﻿using EichkustMusic.Tracks.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Moq;
-using EichkustMusic.Tracks.Application.UnitOfWork;
-using EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork;
-using Moq.EntityFrameworkCore;
 using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
 using EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositories;
 using EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests.Mocks;
@@ -15,13 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using EichkustMusic.Tracks.Domain.Entities;
 using System.Text.Json;
 using System.Diagnostics;
-using Amazon.S3;
 using Microsoft.Extensions.Configuration;
-using EichkustMusic.Tracks.Infrastructure.S3;
-using EichkustMusic.Tracks.Application.S3;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using EichkustMusic.Tracks.Application.UnitOfWork.Exceptions;
+using EichkustMusic.S3;
 
 namespace EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests
 {
