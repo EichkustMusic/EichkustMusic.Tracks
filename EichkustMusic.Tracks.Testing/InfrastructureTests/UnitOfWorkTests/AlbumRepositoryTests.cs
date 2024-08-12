@@ -1,19 +1,14 @@
-﻿using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
+﻿using EichkustMusic.S3;
+using EichkustMusic.Tracks.Application.UnitOfWork.Repositories;
 using EichkustMusic.Tracks.Domain.Entities;
 using EichkustMusic.Tracks.Infrastructure.Persistence;
 using EichkustMusic.Tracks.Infrastructure.Persistence.UnitOfWork.Repositories;
-using EichkustMusic.Tracks.Infrastructure.S3;
 using EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests.Mocks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace EichkustMusic.Tracks.Testing.InfrastructureTests.UnitOfWorkTests
 {
